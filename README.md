@@ -15,7 +15,7 @@ This project uses **Streamlit** to create a webpage displaying visual results fr
     
 3. **Visualization**
    - Logistic Regression plots for **Imputed Data** and  **Imputed + Transformed Data**
-   - XGBoost plots for all threee types of data.
+   - XGBoost plots for all three types of data.
    - SHAP analysis for feature importance
    - Comparative visualizations for Logistic Regression vs. XGBoost and initial vs. final XGBoost 
 
