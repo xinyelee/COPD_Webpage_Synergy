@@ -1,6 +1,8 @@
 import streamlit as st
 from PIL import Image
 import os
+import datetime
+
 
 # Define paths to image directories based on dataset type
 ASSETS_DIR = "assets"
@@ -26,7 +28,7 @@ data_type_folder = DATA_TYPES[data_type_choice]
 
 # Sidebar information about the dashboard
 st.sidebar.markdown("### About This Dashboard")
-st.sidebar.info("This dashboard allows you to visualize model performance and feature importance for different data preprocessing methods applied to COPD datasets.")
+st.sidebar.info(f"This dashboard is created by SMU Team Synergy and last updated on {datetime.date.today()}.")
 
 # Loading spinner for visual feedback while loading images
 with st.spinner("Loading images and visualizations..."):
@@ -69,12 +71,9 @@ with st.spinner("Loading images and visualizations..."):
         comparison_xgb_final_path = os.path.join(ASSETS_DIR, "Comparisons", "XGB_initial_vs_final.png")
         load_image(comparison_xgb_final_path, "Comparison of Initial and Final XGBoost Models")
 
-# Additional interactive widget (slider) for hypothetical future use
-st.sidebar.markdown("### Model Performance Threshold")
-confidence_threshold = st.sidebar.slider("Select confidence threshold for model performance display", 0.0, 1.0, 0.75)
-st.sidebar.write(f"Selected confidence threshold: {confidence_threshold}")
+# Additional interactive widget (tbc)
+
 
 # Footer with information about the project and sources
 st.markdown("---")
 st.markdown("**COPD Exacerbation Prediction Dashboard**")
-st.markdown("This dashboard is built for visualizing model predictions and insights in COPD exacerbation risk. For more information, see the [Streamlit documentation](https://docs.streamlit.io/).")
