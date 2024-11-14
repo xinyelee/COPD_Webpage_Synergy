@@ -17,44 +17,24 @@ st.set_page_config(page_title="COPD Data Dashboard", page_icon="📊", layout="w
 # Title and description
 st.title("📊 COPD Exacerbation Prediction Dashboard")
 st.write("""
-This dashboard, created by SMU Team Synergy, provides an analysis of COPD patient data using Logistic Regression and XGBoost models across different preprocessing techniques.
+This dashboard, created by SMU Team Synergy, offers insights into model performance on raw, imputed, and transformed datasets. 
+It includes visualizations for Logistic Regression and XGBoost models, as well as SHAP analysis to understand feature importance.
 """)
 
 # Sidebar options
 st.sidebar.header("Filter Options")
-data_type_choice = st.sidebar.selectbox("Select Data Type", list(DATA_TYPES.keys()))
-data_type_folder = DATA_TYPES[data_type_choice]
+data_type_choice = st.sidebar.selectbox("Select Data Type", ["Overall View"] + list(DATA_TYPES.keys()))
+view_choice = st.sidebar.radio("View By", ["Logistic Regression", "XGBoost", "SHAP Analysis", "Comparative Insights"])
+data_type_folder = DATA_TYPES.get(data_type_choice, None)
 st.sidebar.info(f"Dashboard by SMU Team Synergy | Last updated: {datetime.today().strftime('%d %b %Y')}")
 
-# Key Features Section
-st.markdown("## Key Features in the Dataset")
-st.write("""
-This dataset includes key features that impact COPD exacerbation risk, along with engineered features aimed at enhancing prediction accuracy and model insights:
-
-- **Age**: Older age is often associated with higher exacerbation risk.
-- **Smoking History**: Duration of smoking, critical in assessing respiratory conditions.
-- **Spirometry Values (FEV1, FVC)**: Measures of lung function; lower values indicate severe airflow limitation.
-- **Engineered Features**: Includes rolling averages and lagged spirometry values to capture temporal trends.
-- **Comorbidities**: Presence of other conditions, such as cardiovascular issues, may influence exacerbation risk.
-""")
-
-# Key Insights Section
-st.markdown("## Key Insights")
-st.write("""
-Here are some primary insights derived from the models and SHAP analysis:
-
-- **Age** and **Smoking History** are significant predictors of exacerbation risk.
-- **Spirometry Values** (FEV1, FVC) are crucial indicators, with lower values linked to higher risk.
-- **Comorbidities** add valuable context for assessing risk among patients with complex health profiles.
-""")
-
-# Helper function to load and display image, with download option if image exists
+# Helper function to load and display image, with error message if image is missing
 def load_image_with_download(path, caption):
     if os.path.exists(path):
         img = Image.open(path)
         st.image(img, caption=caption)
         with open(path, "rb") as file:
-            btn = st.download_button(
+            st.download_button(
                 label=f"Download {caption}",
                 data=file,
                 file_name=os.path.basename(path),
@@ -63,64 +43,83 @@ def load_image_with_download(path, caption):
     else:
         st.warning(f"{caption} image is not available. Please upload the necessary files to the assets folder.")
 
-# Section 1: Logistic Regression Visualizations
-st.markdown("---")
-st.header("1. Logistic Regression Visualizations")
+# Section to display key features and insights
+st.markdown("## Key Features in the Dataset")
 st.write("""
-Logistic Regression is used to analyze binary outcomes (exacerbation vs. no exacerbation) and is effective when linear relationships exist between predictors and log-odds. Key performance metrics include AUPRC, balanced accuracy, and log loss.
-""")
-lr_image_path = os.path.join(ASSETS_DIR, data_type_folder, f"LR_{data_type_folder.lower()}.png")
-load_image_with_download(lr_image_path, f"Logistic Regression on {data_type_choice}")
+This dataset includes key features impacting COPD exacerbation risk, along with engineered features aimed at enhancing prediction accuracy:
 
-# Section 2: XGBoost Visualizations
-st.markdown("---")
-st.header("2. XGBoost Visualizations")
-st.write("""
-XGBoost is well-suited for handling non-linear relationships and imbalanced data. This section highlights performance metrics across raw, imputed, and transformed datasets, showcasing improvements in prediction accuracy when using engineered features and imputation.
-""")
-xgb_image_path = os.path.join(ASSETS_DIR, data_type_folder, f"XGB_{data_type_folder.lower()}.png")
-load_image_with_download(xgb_image_path, f"XGBoost on {data_type_choice}")
-
-# Section 3: SHAP Feature Importance
-st.markdown("---")
-st.header("3. SHAP Analysis")
-st.write("""
-SHAP analysis provides insights into feature importance, showing how each feature impacts model predictions on an individual level.
+- **Age**: Older age often correlates with higher exacerbation risk.
+- **Smoking History**: Duration and status of smoking, critical in respiratory conditions.
+- **Spirometry Values (FEV1, FVC)**: Measures of lung function, where lower values indicate airflow limitation.
+- **Engineered Features**: Includes rolling averages, lagged values, and interaction terms for temporal patterns.
+- **Comorbidities**: Presence of conditions like cardiovascular disease may influence exacerbation risk.
 """)
 
-# SHAP for XGBoost (all data types)
-st.subheader("XGBoost SHAP Analysis")
+st.markdown("## Key Insights")
 st.write("""
-The SHAP summary plot for XGBoost reveals key features such as **Age**, **Smoking History**, and **FEV1**. By examining SHAP values, clinicians can understand the direction and magnitude of each feature's influence on exacerbation predictions.
-""")
-shap_xgb_path = os.path.join(ASSETS_DIR, data_type_folder, f"SHAP_XGB_{data_type_folder.lower()}.png")
-load_image_with_download(shap_xgb_path, f"SHAP Feature Importance for XGBoost on {data_type_choice}")
+Insights derived from the models and SHAP analysis include:
 
-# SHAP for Logistic Regression (only for imputed and transformed data)
-if data_type_choice in ["Imputed Data", "Imputed + Transformed Data"]:
-    st.subheader("Logistic Regression SHAP Analysis")
+- **Age** and **Smoking History** are consistent predictors of exacerbation risk.
+- **Spirometry Values** (FEV1, FVC) are strong indicators, with lower values linked to higher risk.
+- **Comorbidities** add context for assessing risk in patients with complex health profiles.
+""")
+
+# Display sections based on sidebar selection
+if view_choice == "Logistic Regression":
+    st.markdown("---")
+    st.header("Logistic Regression Visualizations")
     st.write("""
-    The SHAP plot for Logistic Regression emphasizes features impacting the linear model’s decisions. Differences from the XGBoost SHAP analysis may reveal insights specific to linear relationships in exacerbation risk.
+    Logistic Regression is used to predict binary outcomes and is particularly useful for exploring linear relationships among predictors.
     """)
-    shap_lr_path = os.path.join(ASSETS_DIR, data_type_folder, f"SHAP_LR_{data_type_folder.lower()}.png")
-    load_image_with_download(shap_lr_path, f"SHAP Feature Importance for Logistic Regression on {data_type_choice}")
+    for data_type, folder in DATA_TYPES.items():
+        st.subheader(f"Logistic Regression on {data_type}")
+        lr_image_path = os.path.join(ASSETS_DIR, folder, f"LR_{folder.lower()}.png")
+        load_image_with_download(lr_image_path, f"Logistic Regression for {data_type}")
 
-# Section 4: Comparative Visualizations
-st.markdown("---")
-st.header("4. Comparative Visualizations")
-st.write("""
-Comparison charts allow for visual evaluation of Logistic Regression versus XGBoost, and initial versus tuned XGBoost models. These comparisons reveal how feature selection, data imputation, and hyperparameter tuning improve model performance.
-""")
+elif view_choice == "XGBoost":
+    st.markdown("---")
+    st.header("XGBoost Visualizations")
+    st.write("""
+    XGBoost is ideal for handling non-linear relationships and imbalanced data, capturing complex patterns.
+    """)
+    for data_type, folder in DATA_TYPES.items():
+        st.subheader(f"XGBoost on {data_type}")
+        xgb_image_path = os.path.join(ASSETS_DIR, folder, f"XGB_{folder.lower()}.png")
+        load_image_with_download(xgb_image_path, f"XGBoost for {data_type}")
 
-with st.expander("Logistic Regression vs XGBoost Comparison", expanded=True):
-    comparison_lr_xgb_path = os.path.join(ASSETS_DIR, "Comparisons", "LR_vs_XGB.png")
-    load_image_with_download(comparison_lr_xgb_path, "Comparison of Logistic Regression and XGBoost")
+elif view_choice == "SHAP Analysis":
+    st.markdown("---")
+    st.header("SHAP Analysis for Feature Importance")
+    st.write("""
+    SHAP analysis provides insights into the importance of each predictor on model outcomes.
+    """)
+    for data_type, folder in DATA_TYPES.items():
+        st.subheader(f"SHAP Analysis for XGBoost on {data_type}")
+        shap_xgb_path = os.path.join(ASSETS_DIR, folder, f"SHAP_XGB_{folder.lower()}.png")
+        load_image_with_download(shap_xgb_path, f"SHAP Feature Importance for XGBoost on {data_type}")
 
-with st.expander("Initial vs Final XGBoost Comparison", expanded=True):
-    comparison_xgb_final_path = os.path.join(ASSETS_DIR, "Comparisons", "XGB_initial_vs_final.png")
-    load_image_with_download(comparison_xgb_final_path, "Comparison of Initial and Final XGBoost Models")
+        if data_type in ["Imputed Data", "Imputed + Transformed Data"]:
+            st.subheader(f"SHAP Analysis for Logistic Regression on {data_type}")
+            shap_lr_path = os.path.join(ASSETS_DIR, folder, f"SHAP_LR_{folder.lower()}.png")
+            load_image_with_download(shap_lr_path, f"SHAP Feature Importance for Logistic Regression on {data_type}")
 
-# Footer with information about the project and sources
+elif view_choice == "Comparative Insights":
+    st.markdown("---")
+    st.header("Comparative Visualizations")
+    st.write("""
+    Comparative insights highlight differences between Logistic Regression and XGBoost, as well as initial vs. final XGBoost models.
+    """)
+    with st.expander("Logistic Regression vs XGBoost Comparison", expanded=True):
+        comparison_lr_xgb_path = os.path.join(ASSETS_DIR, "Comparisons", "LR_vs_XGB.png")
+        load_image_with_download(comparison_lr_xgb_path, "Comparison of Logistic Regression and XGBoost")
+
+    with st.expander("Initial vs Final XGBoost Comparison", expanded=True):
+        comparison_xgb_final_path = os.path.join(ASSETS_DIR, "Comparisons", "XGB_initial_vs_final.png")
+        load_image_with_download(comparison_xgb_final_path, "Comparison of Initial and Final XGBoost Models")
+
+# Footer with information about the project
 st.markdown("---")
 st.markdown("**COPD Exacerbation Prediction Dashboard**")
-
+st.write("""
+This dashboard by SMU Team Synergy provides insights into COPD exacerbation risk factors, highlighting model performance and feature importance through SHAP analysis.
+""")
