@@ -1,7 +1,7 @@
 import streamlit as st
 from PIL import Image
 import os
-import datetime
+from datetime import datetime
 
 
 # Define paths to image directories based on dataset type
@@ -28,7 +28,8 @@ data_type_folder = DATA_TYPES[data_type_choice]
 
 # Sidebar information about the dashboard
 st.sidebar.markdown("### About This Dashboard")
-st.sidebar.info(f"This dashboard is created by SMU Team Synergy and last updated on {datetime.date.today()}.")
+last_updated_date = datetime.today().strftime("%d %b %Y") 
+st.sidebar.info(f"This dashboard is created by SMU Team Synergy and last updated on {last_updated_date}.")
 
 # Loading spinner for visual feedback while loading images
 with st.spinner("Loading images and visualizations..."):
