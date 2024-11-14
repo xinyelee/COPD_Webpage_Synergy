@@ -30,18 +30,33 @@ The webpage displays:
 
 ## How to Use
 
-1. **Clone this Repository**
-   ```bash
-   git clone https://github.com/xinyelee/COPD_Webpage_Synergy.git
-   cd COPD_Webpage_Synergy
+1. **Access the Deployed App**
+   - The app is deployed on Streamlit Cloud. You can access it directly at:
+     [https://copd-dashboard-smu-fyp-team-synergy.streamlit.app/](https://copd-dashboard-smu-fyp-team-synergy.streamlit.app/)
 
-2. **Run and Test the App Locally**
+2. **Run Locally**
 
-- **Install Dependencies**
-   ```bash
-   pip install -r requirements.txt
-- **Run the Streamlit App**
-   ```bash
-   streamlit run app.py
-- **Access the Local Server**
-   Open http://localhost:8501 in your browser to view the app.
+   If you want to run the app locally, follow these steps:
+
+   - **Clone this Repository**
+     ```bash
+     git clone https://github.com/xinyelee/COPD_Webpage_Synergy.git
+     cd COPD_Webpage_Synergy
+     ```
+
+   - **Install Dependencies**
+     ```bash
+     pip install -r requirements.txt
+     ```
+
+   - **Run the Streamlit App**
+     ```bash
+     streamlit run app.py
+     ```
+
+   - **Access the Local Server**
+     Open [http://localhost:8501](http://localhost:8501) in your browser to view the app.
+
+## Updates and Redeployment
+
+The app will automatically redeploy on Streamlit Cloud whenever changes are pushed to the main branch of this repository. Simply commit and push any updates (including new images in the `assets` folder) to see them reflected in the deployed app.
