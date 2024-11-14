@@ -1,4 +1,4 @@
-# CCOPD Exacerbation Prediction Webpage
+# COPD Exacerbation Prediction Webpage
 
 This project creates a webpage using **Streamlit** to display visual results from Logistic Regression and XGBoost models on COPD data, featuring comparisons of model performance on raw and imputed datasets, along with performance metrics and feature importance visualization. 
 
