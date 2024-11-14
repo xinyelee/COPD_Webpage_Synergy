@@ -23,11 +23,15 @@ It includes visualizations for Logistic Regression and XGBoost models, as well a
 
 # Sidebar options
 st.sidebar.header("Filter Options")
-data_type_choice = st.sidebar.selectbox("Select Data Type", list(DATA_TYPES.keys()))
-data_type_folder = DATA_TYPES[data_type_choice]
+display_all_data_types = st.sidebar.checkbox("Display All Data Types")
+if not display_all_data_types:
+    data_type_choice = st.sidebar.selectbox("Select Data Type", list(DATA_TYPES.keys()))
+    data_type_folder = DATA_TYPES[data_type_choice]
+else:
+    data_type_choice = "All Data Types"
 
 # Checkboxes for Visualization Sections
-st.sidebar.subheader("Select Visualization Sections")
+st.sidebar.subheader("Select Sections")
 select_all = st.sidebar.checkbox("Select All", value=True)
 
 view_logistic_regression = st.sidebar.checkbox("Logistic Regression", value=select_all)
@@ -74,33 +78,58 @@ Insights derived from the models and SHAP analysis include:
 """)
 
 # Display sections based on sidebar selections
-if view_logistic_regression and data_type_choice != "Raw Data":
+if view_logistic_regression:
     st.markdown("---")
     st.header("Logistic Regression Visualizations")
-    st.write("Logistic Regression is used to predict binary outcomes (exacerbation vs. no exacerbation) and is applied to imputed and transformed datasets.")
-    lr_image_path = os.path.join(ASSETS_DIR, data_type_folder, f"LR_{data_type_folder.lower()}.png")
-    load_image_with_download(lr_image_path, f"Logistic Regression for {data_type_choice}")
+    st.write("Logistic Regression is applied to imputed and transformed datasets to predict binary outcomes (exacerbation vs. no exacerbation).")
+    
+    if display_all_data_types:
+        for data_type, folder in DATA_TYPES.items():
+            if data_type != "Raw Data":  # Only show for Imputed and Transformed Data
+                lr_image_path = os.path.join(ASSETS_DIR, folder, f"LR_{folder.lower()}.png")
+                load_image_with_download(lr_image_path, f"Logistic Regression for {data_type}")
+    else:
+        if data_type_choice != "Raw Data":  # Only show for Imputed and Transformed Data
+            lr_image_path = os.path.join(ASSETS_DIR, data_type_folder, f"LR_{data_type_folder.lower()}.png")
+            load_image_with_download(lr_image_path, f"Logistic Regression for {data_type_choice}")
 
 if view_xgboost:
     st.markdown("---")
     st.header("XGBoost Visualizations")
-    st.write("XGBoost is applied to capture complex non-linear patterns in COPD data, using raw, imputed, and transformed datasets.")
-    xgb_image_path = os.path.join(ASSETS_DIR, data_type_folder, f"XGB_{data_type_folder.lower()}.png")
-    load_image_with_download(xgb_image_path, f"XGBoost for {data_type_choice}")
+    st.write("XGBoost is applied across raw, imputed, and transformed datasets, capturing complex non-linear patterns in COPD data.")
+    
+    if display_all_data_types:
+        for data_type, folder in DATA_TYPES.items():
+            xgb_image_path = os.path.join(ASSETS_DIR, folder, f"XGB_{folder.lower()}.png")
+            load_image_with_download(xgb_image_path, f"XGBoost for {data_type}")
+    else:
+        xgb_image_path = os.path.join(ASSETS_DIR, data_type_folder, f"XGB_{data_type_folder.lower()}.png")
+        load_image_with_download(xgb_image_path, f"XGBoost for {data_type_choice}")
 
 if view_shap_analysis:
     st.markdown("---")
     st.header("SHAP Analysis for Feature Importance")
     st.write("SHAP analysis provides insights into the influence of each feature on model predictions.")
     
-    if data_type_choice != "Raw Data":
-        st.subheader(f"SHAP Analysis for Logistic Regression on {data_type_choice}")
-        shap_lr_path = os.path.join(ASSETS_DIR, data_type_folder, f"SHAP_LR_{data_type_folder.lower()}.png")
-        load_image_with_download(shap_lr_path, f"SHAP Feature Importance for Logistic Regression on {data_type_choice}")
-
-    st.subheader(f"SHAP Analysis for XGBoost on {data_type_choice}")
-    shap_xgb_path = os.path.join(ASSETS_DIR, data_type_folder, f"SHAP_XGB_{data_type_folder.lower()}.png")
-    load_image_with_download(shap_xgb_path, f"SHAP Feature Importance for XGBoost on {data_type_choice}")
+    if display_all_data_types:
+        for data_type, folder in DATA_TYPES.items():
+            if data_type != "Raw Data":  # Only show Logistic Regression SHAP for Imputed and Transformed Data
+                st.subheader(f"SHAP Analysis for Logistic Regression on {data_type}")
+                shap_lr_path = os.path.join(ASSETS_DIR, folder, f"SHAP_LR_{folder.lower()}.png")
+                load_image_with_download(shap_lr_path, f"SHAP Feature Importance for Logistic Regression on {data_type}")
+            
+            st.subheader(f"SHAP Analysis for XGBoost on {data_type}")
+            shap_xgb_path = os.path.join(ASSETS_DIR, folder, f"SHAP_XGB_{folder.lower()}.png")
+            load_image_with_download(shap_xgb_path, f"SHAP Feature Importance for XGBoost on {data_type}")
+    else:
+        if data_type_choice != "Raw Data":  # Only show Logistic Regression SHAP for Imputed and Transformed Data
+            st.subheader(f"SHAP Analysis for Logistic Regression on {data_type_choice}")
+            shap_lr_path = os.path.join(ASSETS_DIR, data_type_folder, f"SHAP_LR_{data_type_folder.lower()}.png")
+            load_image_with_download(shap_lr_path, f"SHAP Feature Importance for Logistic Regression on {data_type_choice}")
+        
+        st.subheader(f"SHAP Analysis for XGBoost on {data_type_choice}")
+        shap_xgb_path = os.path.join(ASSETS_DIR, data_type_folder, f"SHAP_XGB_{data_type_folder.lower()}.png")
+        load_image_with_download(shap_xgb_path, f"SHAP Feature Importance for XGBoost on {data_type_choice}")
 
 if view_comparative_insights:
     st.markdown("---")
@@ -119,4 +148,3 @@ if view_comparative_insights:
 # Footer with information about the project
 st.markdown("---")
 st.markdown("**COPD Exacerbation Prediction Dashboard**")
-
