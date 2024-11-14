@@ -1,79 +1,80 @@
 import streamlit as st
 from PIL import Image
-import plotly.express as px
-import pandas as pd
 import os
 
-# Define paths to image directories
-LR_PATH = "assets/1_LR"
-XGB_PATH = "assets/2_XGB"
-SHAP_PATH = "assets/3_SHAP"
-COMPARISON_PATH = "assets/4_Comparisons"
+# Define paths to image directories based on dataset type
+ASSETS_DIR = "assets"
+DATA_TYPES = {
+    "Raw Data": "Raw",
+    "Imputed Data": "Imputed",
+    "Imputed + Transformed Data": "Imputed_Transformed"
+}
 
-st.title("COPD Exacerbation Prediction Dashboard")
+st.set_page_config(page_title="COPD Exacerbation Prediction Dashboard", page_icon="📊", layout="wide")
 
+# Title and description
+st.title("📊 COPD Exacerbation Prediction Dashboard")
 st.write("""
 This dashboard displays visual results from Logistic Regression and XGBoost models on COPD data, 
 featuring comparisons of model performance across different data types, along with feature importance visualizations.
 """)
 
-# Sidebar Filters
+# Sidebar Filter for Data Type
 st.sidebar.header("Filter Options")
-data_type = st.sidebar.selectbox("Select Data Type", ["Raw Data", "Imputed Data", "Imputed + Transformed Data"])
+data_type_choice = st.sidebar.selectbox("Select Data Type", list(DATA_TYPES.keys()))
+data_type_folder = DATA_TYPES[data_type_choice]
 
-# Section 1: Logistic Regression Visualizations
-st.header("1. Logistic Regression Visualizations")
-if data_type in ["Imputed Data", "Imputed + Transformed Data"]:
-    st.subheader(f"Logistic Regression on {data_type}")
-    lr_image_path = os.path.join(LR_PATH, f"{data_type.replace(' ', '_').lower()}.png")
-    if os.path.exists(lr_image_path):
-        img_lr = Image.open(lr_image_path)
-        st.image(img_lr, caption=f"Logistic Regression results for {data_type}")
-    else:
-        st.write(f"Image for Logistic Regression on {data_type} not found.")
+# Sidebar information about the dashboard
+st.sidebar.markdown("### About This Dashboard")
+st.sidebar.info("This dashboard allows you to visualize model performance and feature importance for different data preprocessing methods applied to COPD datasets.")
 
-# Section 2: XGBoost Visualizations
-st.header("2. XGBoost Visualizations")
-st.subheader(f"XGBoost on {data_type}")
-xgb_image_path = os.path.join(XGB_PATH, f"{data_type.replace(' ', '_').lower()}.png")
-if os.path.exists(xgb_image_path):
-    img_xgb = Image.open(xgb_image_path)
-    st.image(img_xgb, caption=f"XGBoost results for {data_type}")
-else:
-    st.write(f"Image for XGBoost on {data_type} not found.")
+# Loading spinner for visual feedback while loading images
+with st.spinner("Loading images and visualizations..."):
 
-# Section 3: SHAP Visualisations
-st.header("3. SHAP Analysis")
-st.subheader("Logistic Regression SHAP Analysis")
-shap_lr_image_path = os.path.join(SHAP_PATH, "SHAP_LR.png")
-if os.path.exists(shap_lr_image_path):
-    img_shap_lr = Image.open(shap_lr_image_path)
-    st.image(img_shap_lr, caption="SHAP Feature Importance for Logistic Regression")
-else:
-    st.write("SHAP image for Logistic Regression not found.")
+    # Helper function to load an image if it exists
+    def load_image(path, caption):
+        if os.path.exists(path):
+            img = Image.open(path)
+            st.image(img, caption=caption)
+        else:
+            st.warning(f"{caption} image is not available. Please upload the necessary files to the assets folder.")
 
-st.subheader("XGBoost SHAP Analysis")
-shap_xgb_image_path = os.path.join(SHAP_PATH, "SHAP_XGB.png")
-if os.path.exists(shap_xgb_image_path):
-    img_shap_xgb = Image.open(shap_xgb_image_path)
-    st.image(img_shap_xgb, caption="SHAP Feature Importance for XGBoost")
-else:
-    st.write("SHAP image for XGBoost not found.")
+    # Section 1: Logistic Regression Visualizations
+    st.markdown("---")  # Section divider
+    st.header("1. Logistic Regression Visualizations")
+    lr_image_path = os.path.join(ASSETS_DIR, data_type_folder, f"LR_{data_type_folder.lower()}.png")
+    load_image(lr_image_path, f"Logistic Regression on {data_type_choice}")
 
-# Section 4: Comparative Visualizations
-st.header("4. Comparative Visualizations")
-st.subheader("Logistic Regression vs XGBoost Comparison")
-comparison_lr_xgb_path = os.path.join(COMPARISON_PATH, "LR_vs_XGB_initial.png")
-if os.path.exists(comparison_lr_xgb_path):
-    img_lr_vs_xgb = Image.open(comparison_lr_xgb_path)
-    st.image(img_lr_vs_xgb, caption="Comparison of Logistic Regression and XGBoost")
-else:
-    st.write("Comparison image for Logistic Regression vs XGBoost not found.")
+    # Section 2: XGBoost Visualizations
+    st.markdown("---")
+    st.header("2. XGBoost Visualizations")
+    xgb_image_path = os.path.join(ASSETS_DIR, data_type_folder, f"XGB_{data_type_folder.lower()}.png")
+    load_image(xgb_image_path, f"XGBoost on {data_type_choice}")
 
-st.subheader("Initial vs Final XGBoost Comparison")
-comparison_xgb_final_path = os.path.join(COMPARISON_PATH, "XGBoost_final_vs_initial.png")
-if os.path.exists(comparison_xgb_final_path):
-    img_xgb_final = Image.open(comparison_xgb_final_path)
-    st.image(img_xgb_final, caption="Comparison of Initial and Final XGBoost Models")
-else:
-    st.write("Comparison image for Initial vs Final XGBoost not found.")
+    # Section 3: SHAP Feature Importance
+    st.markdown("---")
+    st.header("3. SHAP Analysis")
+    st.subheader("XGBoost SHAP Analysis")
+    shap_image_path = os.path.join(ASSETS_DIR, data_type_folder, f"SHAP_XGB_{data_type_folder.lower()}.png")
+    load_image(shap_image_path, f"SHAP Feature Importance for XGBoost on {data_type_choice}")
+
+    # Section 4: Comparative Visualizations
+    st.markdown("---")
+    st.header("4. Comparative Visualizations")
+    with st.expander("Logistic Regression vs XGBoost Comparison", expanded=True):
+        comparison_lr_xgb_path = os.path.join(ASSETS_DIR, "Comparisons", "LR_vs_XGB.png")
+        load_image(comparison_lr_xgb_path, "Comparison of Logistic Regression and XGBoost")
+
+    with st.expander("Initial vs Final XGBoost Comparison", expanded=True):
+        comparison_xgb_final_path = os.path.join(ASSETS_DIR, "Comparisons", "XGB_initial_vs_final.png")
+        load_image(comparison_xgb_final_path, "Comparison of Initial and Final XGBoost Models")
+
+# Additional interactive widget (slider) for hypothetical future use
+st.sidebar.markdown("### Model Performance Threshold")
+confidence_threshold = st.sidebar.slider("Select confidence threshold for model performance display", 0.0, 1.0, 0.75)
+st.sidebar.write(f"Selected confidence threshold: {confidence_threshold}")
+
+# Footer with information about the project and sources
+st.markdown("---")
+st.markdown("**COPD Exacerbation Prediction Dashboard**")
+st.markdown("This dashboard is built for visualizing model predictions and insights in COPD exacerbation risk. For more information, see the [Streamlit documentation](https://docs.streamlit.io/).")
