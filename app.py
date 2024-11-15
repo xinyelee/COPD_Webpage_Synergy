@@ -17,13 +17,13 @@ st.set_page_config(page_title="COPD Data Dashboard", page_icon="📊", layout="w
 # Title and description
 st.title("📊 COPD Exacerbation Prediction Dashboard")
 st.write("""
-This dashboard, created by SMU Team Synergy, provides insights into model performance on raw, imputed, and transformed COPD datasets. 
+This dashboard, created by SMU Team Synergy, provides insights into model performance on COPD datasets. 
 It includes visualizations for Logistic Regression and XGBoost models, as well as SHAP analysis to understand feature importance.
 """)
 
 # Sidebar options
 st.sidebar.header("Filter Options")
-display_all_data_types = st.sidebar.checkbox("Display All Data Types")
+display_all_data_types = st.sidebar.checkbox("All Data Types")
 if not display_all_data_types:
     data_type_choice = st.sidebar.selectbox("Select Data Type", list(DATA_TYPES.keys()))
     data_type_folder = DATA_TYPES[data_type_choice]
@@ -39,7 +39,9 @@ view_xgboost = st.sidebar.checkbox("XGBoost", value=select_all)
 view_shap_analysis = st.sidebar.checkbox("SHAP Analysis", value=select_all)
 view_comparative_insights = st.sidebar.checkbox("Comparative Insights", value=select_all)
 
-st.sidebar.info(f"Dashboard by SMU Team Synergy | Last updated: {datetime.today().strftime('%d %b %Y')}")
+# Set a fixed "last updated" date
+last_updated_date = datetime(2024, 11, 14)
+st.sidebar.info(f"Dashboard by SMU Team Synergy | Last updated: {last_updated_date.strftime('%d %b %Y')}")
 
 # Helper function to load and display image, with error message if image is missing
 def load_image_with_download(path, caption):
