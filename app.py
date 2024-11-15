@@ -3,6 +3,7 @@ from PIL import Image
 import os
 from datetime import datetime
 from zipfile import ZipFile
+import streamlit.components.v1 as components
 
 # Define paths to image directories based on dataset type
 ASSETS_DIR = "assets"
@@ -16,9 +17,9 @@ DATA_TYPES = {
 # Set page title and icon
 st.set_page_config(page_title="COPD Data Dashboard", page_icon="📊", layout="wide")
 
-# Sidebar navigation with EDA as the first option
+# Sidebar navigation 
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["EDA Overview", "Dashboard"])
+page = st.sidebar.radio("Go to", ["EDA Overview", "Dashboard", "SHAP Force Plot Analysis"])
 
 # Fixed last updated date
 last_updated_date = datetime(2024, 11, 14)
@@ -199,6 +200,51 @@ if page == "Dashboard":
             comparison_xgb_final_path = os.path.join(ASSETS_DIR, "Comparisons", "XGB_initial_vs_final.png")
             load_image(comparison_xgb_final_path, "Comparison of Initial and Final XGBoost Models")
 
+
+# SHAP Force Plot Analysis Page
+elif page == "SHAP Force Plot Analysis":
+    st.title("SHAP Force Plot Analysis - Feature Importance")
+
+    st.write("""
+    SHAP analysis provides insights into the influence of each feature on model predictions.
+    The following force plots highlight the contributions of individual features for XGBoost and Logistic Regression models.
+    """)
+
+    # Display SHAP Force Plot for XGBoost Model
+    st.header("XGBoost Model - SHAP Force Plot")
+    st.write("This plot demonstrates the impact of each feature on the prediction for a sample in the XGBoost model.")
+    force_plot_xgb_path = "/mnt/data/force_plot_xgb.html"
+    if os.path.exists(force_plot_xgb_path):
+        components.html(open(force_plot_xgb_path, 'r', encoding='utf-8').read(), height=400, scrolling=True)
+    else:
+        st.warning("XGBoost force plot is not available. Please upload the necessary file.")
+
+    # Display SHAP Force Plot for Logistic Regression Model
+    st.header("Logistic Regression Model - SHAP Force Plot")
+    st.write("This plot shows feature contributions in the Logistic Regression model for a sample.")
+    force_plot_lr_path = "/mnt/data/force_plot_LR.html"
+    if os.path.exists(force_plot_lr_path):
+        components.html(open(force_plot_lr_path, 'r', encoding='utf-8').read(), height=400, scrolling=True)
+    else:
+        st.warning("Logistic Regression force plot is not available. Please upload the necessary file.")
+
+    # Optional: Add download buttons for the HTML files at the end
+    st.markdown("### Download SHAP Force Plots")
+    with open(force_plot_xgb_path, "rb") as file:
+        st.download_button(
+            label="Download XGBoost SHAP Force Plot",
+            data=file,
+            file_name="force_plot_xgb.html",
+            mime="text/html"
+        )
+
+    with open(force_plot_lr_path, "rb") as file:
+        st.download_button(
+            label="Download Logistic Regression SHAP Force Plot",
+            data=file,
+            file_name="force_plot_LR.html",
+            mime="text/html"
+        )
 
 # Footer with information about the project
 st.markdown("---")
