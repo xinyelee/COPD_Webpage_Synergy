@@ -5,6 +5,7 @@ from datetime import datetime
 
 # Define paths to image directories based on dataset type
 ASSETS_DIR = "assets"
+EDA_DIR = os.path.join(ASSETS_DIR, "EDA")  # Updated EDA directory path
 DATA_TYPES = {
     "Raw Data": "Raw",
     "Imputed Data": "Imputed",
@@ -34,6 +35,7 @@ else:
 st.sidebar.subheader("Select Sections")
 select_all = st.sidebar.checkbox("Select All", value=True)
 
+view_eda = st.sidebar.checkbox("EDA", value=select_all)
 view_logistic_regression = st.sidebar.checkbox("Logistic Regression", value=select_all)
 view_xgboost = st.sidebar.checkbox("XGBoost", value=select_all)
 view_shap_analysis = st.sidebar.checkbox("SHAP Analysis", value=select_all)
@@ -58,28 +60,43 @@ def load_image_with_download(path, caption):
     else:
         st.warning(f"{caption} image is not available. Please upload the necessary files to the assets folder.")
 
-# Section to display key features and insights
-st.markdown("## Key Features in the Dataset")
-st.write("""
-This dataset includes key features impacting COPD exacerbation risk, along with engineered features aimed at enhancing prediction accuracy:
+# EDA Section
+if view_eda:
+    st.markdown("---")
+    st.header("Exploratory Data Analysis (EDA)")
+    
+    # Correlation Matrix
+    st.subheader("Correlation Matrix")
+    display_image_path = os.path.join(EDA_DIR, "correlation_matrix.png")
+    load_image_with_download(display_image_path, "Correlation Matrix of Key Variables")
+    
+    # Histograms
+    st.subheader("Histograms")
+    st.write("Distribution of various features.")
+    histograms = {
+        "Distribution of Visit Counts": "visit_counts_histogram.png",
+        "Distribution of Max Eosinophil Count (2015)": "max_eos_count_2015_histogram.png",
+        "Distribution of FEV1/FVC Ratio Mean": "fev1_fvc_ratio_mean_histogram.png",
+        "Distribution of Days Since Last Exacerbation": "days_since_last_exacerbation_histogram.png",
+        "Distribution of Annual Exacerbation Rate": "exacerbation_rate_histogram.png"
+    }
+    for caption, filename in histograms.items():
+        display_image_path = os.path.join(EDA_DIR, filename)
+        load_image_with_download(display_image_path, caption)
+    
+    # Box Plots
+    st.subheader("Box Plots")
+    st.write("Spread and outliers of key variables.")
+    box_plots = {
+        "Distribution and Box Plot of Max PEFR Personal Best": "pefr_best_combined.png",
+        "Distribution and Box Plot of Mean PEFR": "mean_pefr_combined.png",
+        "Distribution and Box Plot of Number of Exacerbations (2019)": "no_exacerbations_2019_combined.png"
+    }
+    for caption, filename in box_plots.items():
+        display_image_path = os.path.join(EDA_DIR, filename)
+        load_image_with_download(display_image_path, caption)
 
-- **Age**: Older age often correlates with higher exacerbation risk.
-- **Smoking History**: Duration and status of smoking, critical in respiratory conditions.
-- **Spirometry Values (FEV1, FVC)**: Measures of lung function, where lower values indicate airflow limitation.
-- **Engineered Features**: Includes rolling averages, lagged values, and interaction terms for temporal patterns.
-- **Comorbidities**: Presence of conditions like cardiovascular disease may influence exacerbation risk.
-""")
-
-st.markdown("## Key Insights")
-st.write("""
-Insights derived from the models and SHAP analysis include:
-
-- **Age** and **Smoking History** are consistent predictors of exacerbation risk.
-- **Spirometry Values** (FEV1, FVC) are strong indicators, with lower values linked to higher risk.
-- **Comorbidities** add context for assessing risk in patients with complex health profiles.
-""")
-
-# Display sections based on sidebar selections
+# Display other sections based on sidebar selections
 if view_logistic_regression:
     st.markdown("---")
     st.header("Logistic Regression Visualizations")
