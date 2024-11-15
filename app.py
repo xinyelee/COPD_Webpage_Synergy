@@ -48,7 +48,7 @@ if page == "EDA Overview":
 
     histograms = {
         "Distribution of Visit Counts": "visit_counts_histogram.png",
-        "Distribution of Max Eosinophil Count (2015)": "max_eos_count_2015_histogram.png",
+        "Distribution of Max Eosinophil Count (2015)": "max_eosinophil_count_2015_histogram.png",
         "Distribution of FEV1/FVC Ratio Mean": "fev1_fvc_ratio_mean_histogram.png",
         "Distribution of Days Since Last Exacerbation": "days_since_last_exacerbation_histogram.png",
         "Distribution of Annual Exacerbation Rate": "exacerbation_rate_histogram.png"
