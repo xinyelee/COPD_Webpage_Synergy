@@ -193,49 +193,6 @@ if page == "Dashboard":
             comparison_xgb_final_path = os.path.join(ASSETS_DIR, "Comparisons", "XGB_initial_vs_final.png")
             load_image(comparison_xgb_final_path, "Comparison of Initial and Final XGBoost Models")
 
-# EDA Overview Page
-elif page == "EDA Overview":
-    st.title("Exploratory Data Analysis (EDA) Overview")
-
-    # Display EDA images
-    st.subheader("Correlation Matrix")
-    display_image_path = os.path.join(EDA_DIR, "correlation_matrix.png")
-    load_image(display_image_path, "Correlation Matrix of Key Variables")
-
-    st.subheader("Histograms")
-    histograms = {
-        "Distribution of Visit Counts": "visit_counts_histogram.png",
-        "Distribution of Max Eosinophil Count (2015)": "max_eos_count_2015_histogram.png",
-        "Distribution of FEV1/FVC Ratio Mean": "fev1_fvc_ratio_mean_histogram.png",
-        "Distribution of Days Since Last Exacerbation": "days_since_last_exacerbation_histogram.png",
-        "Distribution of Annual Exacerbation Rate": "exacerbation_rate_histogram.png"
-    }
-    for caption, filename in histograms.items():
-        display_image_path = os.path.join(EDA_DIR, filename)
-        load_image(display_image_path, caption)
-
-    st.subheader("Box Plots")
-    box_plots = {
-        "Distribution and Box Plot of Max PEFR Personal Best": "pefr_best_combined.png",
-        "Distribution and Box Plot of Mean PEFR": "mean_pefr_combined.png",
-        "Distribution and Box Plot of Number of Exacerbations (2019)": "no_exacerbations_2019_combined.png"
-    }
-    for caption, filename in box_plots.items():
-        display_image_path = os.path.join(EDA_DIR, filename)
-        load_image(display_image_path, caption)
-
-    # Download button for all EDA images
-    with ZipFile('EDA_images.zip', 'w') as zipf:
-        for filename in os.listdir(EDA_DIR):
-            zipf.write(os.path.join(EDA_DIR, filename), filename)
-
-    with open("EDA_images.zip", "rb") as zip_file:
-        st.download_button(
-            label="Download All EDA Images",
-            data=zip_file,
-            file_name="EDA_images.zip",
-            mime="application/zip"
-        )
 
 # Footer with information about the project
 st.markdown("---")
