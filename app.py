@@ -35,54 +35,77 @@ def load_image(path, caption):
 # EDA Overview Page
 if page == "EDA Overview":
     st.title("Exploratory Data Analysis (EDA) Overview")
+    
+    # Set a consistent image width
+    IMAGE_WIDTH = 400  # Adjust width as needed to ensure consistency
 
     # 1. Correlation Analysis
     st.header("1. Correlation Analysis")
     display_image_path = os.path.join(EDA_DIR, "correlation_matrix.png")
-    load_image(display_image_path, "Correlation Matrix of Key Variables")
+    if os.path.exists(display_image_path):
+        st.image(Image.open(display_image_path), caption="Correlation Matrix of Key Variables", width=IMAGE_WIDTH)
+    else:
+        st.warning("Correlation Matrix image is not available. Please upload the necessary file to the assets folder.")
+
     st.write("The correlation matrix shows the relationships between various COPD-related features, helping to identify potential multicollinearity or patterns among key variables.")
 
     # 2. Distribution of Key Features
     st.header("2. Distribution of Key Features")
     st.write("Histograms of key features provide insights into the data distribution for each variable, helping to identify skewness, outliers, and data spread.")
-
+    
     histograms = {
         "Distribution of Visit Counts": "visit_counts_histogram.png",
-        "Distribution of Max Eosinophil Count (2015)": "max_eosinophil_count_2015_histogram.png",
+        "Distribution of Max Eosinophil Count (2015)": "max_eos_count_2015_histogram.png",
         "Distribution of FEV1/FVC Ratio Mean": "fev1_fvc_ratio_mean_histogram.png",
         "Distribution of Days Since Last Exacerbation": "days_since_last_exacerbation_histogram.png",
         "Distribution of Annual Exacerbation Rate": "exacerbation_rate_histogram.png"
     }
+
+    # Display histograms in a two-column format for a consistent layout
     col1, col2 = st.columns(2)
-    with col1:
-        for caption, filename in list(histograms.items())[:3]:  # First 3 histograms in the first column
-            display_image_path = os.path.join(EDA_DIR, filename)
-            load_image(display_image_path, caption)
-    with col2:
-        for caption, filename in list(histograms.items())[3:]:  # Remaining histograms in the second column
-            display_image_path = os.path.join(EDA_DIR, filename)
-            load_image(display_image_path, caption)
+    for i, (caption, filename) in enumerate(histograms.items()):
+        display_image_path = os.path.join(EDA_DIR, filename)
+        if i % 2 == 0:
+            with col1:
+                if os.path.exists(display_image_path):
+                    st.image(Image.open(display_image_path), caption=caption, width=IMAGE_WIDTH)
+                else:
+                    st.warning(f"{caption} image is not available. Please upload the necessary file to the assets folder.")
+        else:
+            with col2:
+                if os.path.exists(display_image_path):
+                    st.image(Image.open(display_image_path), caption=caption, width=IMAGE_WIDTH)
+                else:
+                    st.warning(f"{caption} image is not available. Please upload the necessary file to the assets folder.")
 
     # 3. Spread and Outliers in Important Features (Box Plots)
     st.header("3. Spread and Outliers in Important Features")
     st.write("Box plots highlight the spread and outliers in crucial variables that impact COPD exacerbation, helping to assess data variability and detect extreme values.")
-
+    
     box_plots = {
         "Distribution and Box Plot of Max PEFR Personal Best": "pefr_best_combined.png",
         "Distribution and Box Plot of Mean PEFR": "mean_pefr_combined.png",
         "Distribution and Box Plot of Number of Exacerbations (2019)": "no_exacerbations_2019_combined.png"
     }
+
+    # Display box plots in a two-column format for a consistent layout
     col1, col2 = st.columns(2)
     for i, (caption, filename) in enumerate(box_plots.items()):
         display_image_path = os.path.join(EDA_DIR, filename)
         if i % 2 == 0:
             with col1:
-                load_image(display_image_path, caption)
+                if os.path.exists(display_image_path):
+                    st.image(Image.open(display_image_path), caption=caption, width=IMAGE_WIDTH)
+                else:
+                    st.warning(f"{caption} image is not available. Please upload the necessary file to the assets folder.")
         else:
             with col2:
-                load_image(display_image_path, caption)
+                if os.path.exists(display_image_path):
+                    st.image(Image.open(display_image_path), caption=caption, width=IMAGE_WIDTH)
+                else:
+                    st.warning(f"{caption} image is not available. Please upload the necessary file to the assets folder.")
 
-    # Download button for all EDA images
+    # Download button for all EDA images at the end of the page
     with ZipFile('EDA_images.zip', 'w') as zipf:
         for filename in os.listdir(EDA_DIR):
             zipf.write(os.path.join(EDA_DIR, filename), filename)
@@ -94,7 +117,6 @@ if page == "EDA Overview":
             file_name="EDA_images.zip",
             mime="application/zip"
         )
-
 
 # Dashboard Page
 if page == "Dashboard":
