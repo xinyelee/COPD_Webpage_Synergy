@@ -8,6 +8,7 @@ import streamlit.components.v1 as components
 # Define paths to image directories based on dataset type
 ASSETS_DIR = "assets"
 EDA_DIR = os.path.join(ASSETS_DIR, "EDA")  # Updated EDA directory path
+HTML_DIR = os.path.join(ASSETS_DIR, "html")
 DATA_TYPES = {
     "Raw Data": "Raw",
     "Imputed Data": "Imputed",
@@ -213,20 +214,20 @@ elif page == "SHAP Force Plot Analysis":
     # Display SHAP Force Plot for XGBoost Model
     st.header("XGBoost Model - SHAP Force Plot")
     st.write("This plot demonstrates the impact of each feature on the prediction for a sample in the XGBoost model.")
-    force_plot_xgb_path = "/mnt/data/force_plot_xgb.html"
+    force_plot_xgb_path = os.path.join(HTML_DIR, "force_plot_xgb.html")
     if os.path.exists(force_plot_xgb_path):
         components.html(open(force_plot_xgb_path, 'r', encoding='utf-8').read(), height=400, scrolling=True)
     else:
-        st.warning("XGBoost force plot is not available. Please upload the necessary file.")
+        st.warning("XGBoost force plot is not available. Please upload the necessary file to the assets folder.")
 
     # Display SHAP Force Plot for Logistic Regression Model
     st.header("Logistic Regression Model - SHAP Force Plot")
     st.write("This plot shows feature contributions in the Logistic Regression model for a sample.")
-    force_plot_lr_path = "/mnt/data/force_plot_LR.html"
+    force_plot_lr_path = os.path.join(HTML_DIR, "force_plot_LR.html")
     if os.path.exists(force_plot_lr_path):
         components.html(open(force_plot_lr_path, 'r', encoding='utf-8').read(), height=400, scrolling=True)
     else:
-        st.warning("Logistic Regression force plot is not available. Please upload the necessary file.")
+        st.warning("Logistic Regression force plot is not available. Please upload the necessary file to the assets folder.")
 
     # Optional: Add download buttons for the HTML files at the end
     st.markdown("### Download SHAP Force Plots")
