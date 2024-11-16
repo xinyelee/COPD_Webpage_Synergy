@@ -17,7 +17,7 @@ pages = [
     "First Iteration Results",
     "Final Methodology"
 ]
-selected_page = st.sidebar.radio("Select a section:", pages)
+selected_page = st.sidebar.radio("Go to:", pages)
 
 # Add a footer or additional notes to the sidebar
 st.sidebar.markdown("---")

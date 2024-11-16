@@ -21,8 +21,7 @@ This webpage leverages **Streamlit** to display insights from Logistic Regressio
 ## How to Use
 
 1. **Access the Deployed App**
-   - The app is deployed on Streamlit Cloud. You can access it directly at:
-     [https://copd-dashboard-smu-fyp-team-synergy.streamlit.app/](https://copd-dashboard-smu-fyp-team-synergy.streamlit.app/)
+   - The app is deployed on Streamlit Cloud. You can access it directly at: https://copd-dashboard-smu-fyp-team-synergy.streamlit.app/ 
 
 2. **Run Locally**
 
