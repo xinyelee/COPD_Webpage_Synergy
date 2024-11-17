@@ -110,50 +110,79 @@ elif selected_page == "Exploratory Data Analysis (EDA)":
     st.markdown("# Exploratory Data Analysis (EDA)")
     st.markdown("Explore data distribution, missing values, and relationships between variables.")
 
-    # Display each graph with captions
-    st.markdown("#### Correlation Matrix")
+    # Correlation Matrix
+    st.markdown("### Correlation Matrix")
     st.image("assets/1_EDA/correlation_matrix.png", caption="Correlation Matrix")
-
-    st.markdown("#### Days Since Last Exacerbation Histogram")
-    st.image(
-        "assets/1_EDA/days_since_last_exacerbation_histogram.png",
-        caption="Days Since Last Exacerbation Distribution",
+    st.markdown(
+        "The correlation matrix provides insights into relationships between key features. "
+        "Strong correlations (e.g., between exacerbation counts across years) can guide feature selection and modeling decisions."
     )
 
-    st.markdown("#### Exacerbation Rate Histogram")
-    st.image(
-        "assets/1_EDA/exacerbation_rate_histogram.png",
-        caption="Exacerbation Rate Distribution",
+    # Days Since Last Exacerbation
+    st.markdown("### Days Since Last Exacerbation")
+    st.image("assets/1_EDA/days_since_last_exacerbation_histogram.png", caption="Days Since Last Exacerbation Distribution")
+    st.markdown(
+        "The distribution of days since the last exacerbation is right-skewed, indicating that many patients recently experienced exacerbations, "
+        "while others have been stable for longer periods."
     )
 
-    st.markdown("#### FEV1/FVC Ratio Mean Histogram")
-    st.image(
-        "assets/1_EDA/fev1_fvc_ratio_mean_histogram.png",
-        caption="FEV1/FVC Ratio Mean Distribution",
+    # Exacerbation Rate
+    st.markdown("### Exacerbation Rate")
+    st.image("assets/1_EDA/exacerbation_rate_histogram.png", caption="Exacerbation Rate Distribution")
+    st.markdown(
+        "This chart highlights the distribution of annual exacerbation rates. Most patients have low rates, while a small proportion exhibits high exacerbation frequencies."
     )
 
-    st.markdown("#### Max Eosinophil Count (2015) Histogram")
-    st.image(
-        "assets/1_EDA/max_eos_count_2015_histogram.png",
-        caption="Max Eosinophil Count in 2015 Distribution",
+    # FEV1/FVC Ratio Mean
+    st.markdown("### FEV1/FVC Ratio Mean")
+    st.image("assets/1_EDA/fev1_fvc_ratio_mean_histogram.png", caption="FEV1/FVC Ratio Mean Distribution")
+    st.markdown(
+        "The histogram illustrates the distribution of FEV1/FVC ratios. The data appears normally distributed, reflecting varying levels of airflow limitation among the patient population."
     )
 
-    st.markdown("#### Mean PEFR Combined")
-    st.image("assets/1_EDA/mean_pefr_combined.png", caption="Mean PEFR Combined")
-
-    st.markdown("#### No Exacerbations (2019) Combined")
-    st.image(
-        "assets/1_EDA/no_exacerbations_2019_combined.png",
-        caption="No Exacerbations in 2019 Combined",
+    # Max Eosinophil Count (2015)
+    st.markdown("### Max Eosinophil Count (2015)")
+    st.image("assets/1_EDA/max_eos_count_2015_histogram.png", caption="Max Eosinophil Count in 2015 Distribution")
+    st.markdown(
+        "This chart presents the distribution of maximum eosinophil counts in 2015. "
+        "The skewed data suggests most patients have low eosinophil counts, with a few having higher values, potentially indicating inflammation severity."
     )
 
-    st.markdown("#### PEFR Best Combined")
-    st.image("assets/1_EDA/pefr_best_combined.png", caption="PEFR Best Combined")
-
-    st.markdown("#### Visit Counts Histogram")
-    st.image(
-        "assets/1_EDA/visit_counts_histogram.png", caption="Visit Counts Distribution"
+    # Mean PEFR
+    st.markdown("### Mean PEFR")
+    st.image("assets/1_EDA/mean_pefr_combined.png", caption="Mean PEFR (Histogram and Boxplot)")
+    st.markdown(
+        "- **Histogram**: Shows the distribution of mean PEFR values, peaking at around 400-500.\n"
+        "- **Boxplot**: Provides a concise summary of the data's central tendency and dispersion, with a few notable outliers."
     )
+
+    # Number of Exacerbations in 2019
+    st.markdown("### Number of Exacerbations in 2019")
+    st.image("assets/1_EDA/no_exacerbations_2019_combined.png", caption="Number of Exacerbations in 2019 (Histogram and Boxplot)")
+    st.markdown(
+        "- **Histogram**: Displays the frequency of exacerbation counts in 2019. Most patients have a low number of exacerbations, "
+        "with a few experiencing significantly more.\n"
+        "- **Boxplot**: Summarizes the spread of exacerbation data, showing a high number of outliers."
+    )
+
+    # PEFR Best
+    st.markdown("### PEFR Best")
+    st.image("assets/1_EDA/pefr_best_combined.png", caption="PEFR Best (Histogram and Boxplot)")
+    st.markdown(
+        "- **Histogram**: Shows the distribution of PEFR (Peak Expiratory Flow Rate) Best values. "
+        "Most values cluster around 300-400, with a few outliers on both ends.\n"
+        "- **Boxplot**: Highlights the median PEFR Best value and the spread of the data, including outliers. "
+        "Outliers likely represent exceptional cases or data entry errors."
+    )
+
+    # Visit Counts Distribution
+    st.markdown("### Visit Counts Distribution")
+    st.image("assets/1_EDA/visit_counts_histogram.png", caption="Visit Counts Distribution")
+    st.markdown(
+        "This histogram represents the distribution of visit counts among COPD patients. "
+        "The right-skewed nature indicates most patients have few visits, with a small subset having significantly higher visit counts."
+    )
+
 
 
 elif selected_page == "First Iteration Results":
