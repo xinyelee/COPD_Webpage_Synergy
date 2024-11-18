@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 
 # Page Configuration
 st.set_page_config(
@@ -270,7 +271,102 @@ elif st.session_state.page == "First Iteration Results":
 elif st.session_state.page == "Final Methodology":
     st.markdown("# Final Methodology")
     st.markdown(pages["Final Methodology"])
-  
+
+    # HTML Force Plots Section
+    st.markdown("## Force Plots")
+    st.markdown("""
+    Below are the interactive force plots demonstrating individual feature contributions to model predictions.
+    """)
+
+    # HTML Embedding for Force Plots
+    st.markdown("### Logistic Regression (LR) Force Plot")
+    with open("assets/3_Final_Method/3_html/force_plot_LR.html", "r") as f:
+        force_plot_lr = f.read()
+    st.components.v1.html(force_plot_lr, height=600, scrolling=True)
+
+    st.markdown("### XGBoost (XGB) Force Plot")
+    with open("assets/3_Final_Method/3_html/force_plot_xgb.html", "r") as f:
+        force_plot_xgb = f.read()
+    st.components.v1.html(force_plot_xgb, height=600, scrolling=True)
+
+    # Summary Plots Section
+    st.markdown("## Summary Plots")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.image("assets/3_Final_Method/0.summary_plot/LR.png", caption="Logistic Regression (LR) Summary Plot")
+    with col2:
+        st.image("assets/3_Final_Method/0.summary_plot/xgb.png", caption="XGBoost (XGB) Summary Plot")
+
+    st.markdown("## XGBoost (XGB) Plots")
+    st.image("assets/3_Final_Method/2.XGB_cohort_dep_plots/xgb_bp.png", caption="SHAP Summary Plot - Blood Pressure Features")
+    st.image("assets/3_Final_Method/2.XGB_cohort_dep_plots/xgb_IP.png", caption="SHAP Interaction Plot - Important Features")
+    st.image("assets/3_Final_Method/2.XGB_cohort_dep_plots/xgb_sp.png", caption="SHAP Dependence Plot - Spirometry Features")
+    
+        # Logistic Regression Cohort Dependence Plots
+    st.markdown("## Logistic Regression (LR) Cohort Dependence Plots")
+    lr_directory = "assets/3_Final_Method/1.LR_cohort_dep_plot/"
+    lr_files = [
+        f"{lr_directory}Screenshot from 2024-11-14 16-03-33.png",
+        f"{lr_directory}Screenshot from 2024-11-14 16-03-42.png",
+        f"{lr_directory}Screenshot from 2024-11-14 16-03-54.png",
+        f"{lr_directory}Screenshot from 2024-11-14 16-04-03.png",
+        f"{lr_directory}Screenshot from 2024-11-14 16-04-13.png",
+        f"{lr_directory}Screenshot from 2024-11-14 16-04-22.png",
+        f"{lr_directory}Screenshot from 2024-11-14 16-04-40.png",
+        f"{lr_directory}Screenshot from 2024-11-14 16-04-48.png",
+        f"{lr_directory}Screenshot from 2024-11-14 16-04-53.png",
+        f"{lr_directory}Screenshot from 2024-11-14 16-05-01.png",
+        f"{lr_directory}Screenshot from 2024-11-14 16-05-08.png",
+        f"{lr_directory}Screenshot from 2024-11-14 16-05-15.png",
+        f"{lr_directory}Screenshot from 2024-11-14 16-05-21.png",
+        f"{lr_directory}Screenshot from 2024-11-14 16-05-40.png",
+    ]
+
+    # Display the first 4 images in 2 rows (2 per row)
+    for idx in range(0, min(4, len(lr_files)), 2):
+        col1, col2 = st.columns(2)
+        with col1:
+            st.image(lr_files[idx], caption=f"LR Plot {idx + 1}", use_column_width=True)
+        if idx + 1 < len(lr_files):  # Ensure the second image exists
+            with col2:
+                st.image(lr_files[idx + 1], caption=f"LR Plot {idx + 2}", use_column_width=True)
+
+    # Expandable section for remaining images
+    if len(lr_files) > 4:
+        with st.expander("View More LR Plots"):
+            for idx in range(4, len(lr_files), 2):
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.image(lr_files[idx], caption=f"LR Plot {idx + 1}", use_column_width=True)
+                if idx + 1 < len(lr_files):  # Ensure the second image exists
+                    with col2:
+                        st.image(lr_files[idx + 1], caption=f"LR Plot {idx + 2}", use_column_width=True)
+
+        # XGBoost Cohort Dependence Plots
+    st.markdown("## XGBoost (XGB) Cohort Dependence Plots")
+    xgb_cohort_dir = "assets/3_Final_Method/2.XGB_cohort_dep_plots/plots/"
+    xgb_images = [f for f in os.listdir(xgb_cohort_dir) if f.endswith('.png')]
+    xgb_images = sorted(xgb_images)  # Sort for consistency
+
+    # Display the first 4 images in 2 rows (2 per row)
+    for idx in range(0, min(4, len(xgb_images)), 2):
+        col1, col2 = st.columns(2)
+        with col1:
+            st.image(os.path.join(xgb_cohort_dir, xgb_images[idx]), caption=f"XGB Plot {idx + 1}", use_column_width=True)
+        if idx + 1 < len(xgb_images):  # Ensure the second image exists
+            with col2:
+                st.image(os.path.join(xgb_cohort_dir, xgb_images[idx + 1]), caption=f"XGB Plot {idx + 2}", use_column_width=True)
+
+    # Expandable section for remaining images
+    if len(xgb_images) > 4:
+        with st.expander("View More XGB Plots"):
+            for idx in range(4, len(xgb_images), 2):
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.image(os.path.join(xgb_cohort_dir, xgb_images[idx]), caption=f"XGB Plot {idx + 1}", use_column_width=True)
+                if idx + 1 < len(xgb_images):  # Ensure the second image exists
+                    with col2:
+                        st.image(os.path.join(xgb_cohort_dir, xgb_images[idx + 1]), caption=f"XGB Plot {idx + 2}", use_column_width=True)
 
 # Add a footer to the main page
 st.markdown("---")
