@@ -4,7 +4,7 @@ This webpage leverages **Streamlit** to display insights from Logistic Regressio
 
 ## Key information:
    - Datasets: Raw, Imputed, and Imputed + Transformed.
-   - Imputation: Techniques like MICE and missForest to handle missing values.
+   - Imputation: Techniques like MICE Forest to handle missing values.
    - Logistic Regression on Imputed and Imputed + Transformed datasets only 
    - XGBoost on all three types of datasets
    - SHAP analysis for features selection
